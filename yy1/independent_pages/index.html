@@ -1,0 +1,263 @@
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>上海初升高分数择校平台</title>
+  <!-- 引入Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 引入Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- 配置Tailwind自定义颜色和字体 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#165DFF',
+            secondary: '#36CFC9',
+            accent: '#722ED1',
+            neutral: '#F5F7FA',
+            'neutral-dark': '#4E5969',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-shadow {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      }
+      .school-card {
+        transition: all 0.3s ease;
+      }
+      .school-card:hover {
+        transform: translateY(-5px) rotate(1deg);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+      }
+      .image-container {
+        overflow: hidden;
+        border-radius: 0.75rem 0.75rem 0 0;
+      }
+      .school-image {
+        transition: transform 0.7s ease;
+      }
+      .school-card:hover .school-image {
+        transform: scale(1.1);
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 font-sans text-gray-800">
+  <!-- 导航栏 -->
+  <header class="bg-white shadow-sm sticky top-0 z-50 transition-all duration-300">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <i class="fa fa-graduation-cap text-primary text-2xl"></i>
+        <h1 class="text-xl md:text-2xl font-bold text-primary">上海升学择校助手</h1>
+      </div>
+      
+      <nav class="hidden md:flex items-center space-x-8">
+        <a href="#" class="text-primary font-medium hover:text-primary/80 transition-colors">首页</a>
+        <a href="#consultation" class="text-gray-600 hover:text-primary transition-colors">择校咨询</a>
+        <a href="#guide" class="text-gray-600 hover:text-primary transition-colors">报考指南</a>
+        <a href="#faq" class="text-gray-600 hover:text-primary transition-colors">常见问题</a>
+      </nav>
+      
+      <button class="md:hidden text-gray-600 focus:outline-none">
+        <i class="fa fa-bars text-xl"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- 主横幅 -->
+  <section class="bg-gradient-to-r from-primary to-primary/80 text-white py-12 md:py-20">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold mb-4">上海初升高择校，精准匹配更高效</h2>
+      <p class="text-white/90 max-w-2xl mx-auto text-[clamp(1rem,2vw,1.2rem)]">填写咨询信息，老师将为您提供个性化的高中选择方案和专业建议</p>
+    </div>
+  </section>
+
+  <!-- 搜索区：区域+分数 -->
+  <section class="py-8 -mt-6">
+    <div class="container mx-auto px-4">
+      <div class="bg-white rounded-xl p-6 card-shadow max-w-4xl mx-auto">
+        <!-- 区域和分数输入框 -->
+        <div class="mb-8">
+          <label class="block text-gray-700 font-medium mb-2">请选择区域和输入中考分数</label>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <div class="relative flex-grow">
+              <select id="area" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all appearance-none">
+                <option value="">请选择上海区域</option>
+                <option value="all">全部区域</option>
+                <option value="黄埔">黄浦区</option>
+                <option value="徐汇">徐汇区</option>
+                <option value="长宁">长宁区</option>
+                <option value="静安">静安区</option>
+                <option value="普陀">普陀区</option>
+                <option value="虹口">虹口区</option>
+                <option value="杨浦">杨浦区</option>
+                <option value="闵行">闵行区</option>
+                <option value="宝山">宝山区</option>
+                <option value="嘉定">嘉定区</option>
+                <option value="浦东">浦东新区</option>
+                <option value="金山">金山区</option>
+                <option value="松江">松江区</option>
+                <option value="青浦">青浦区</option>
+                <option value="奉贤">奉贤区</option>
+                <option value="崇明">崇明区</option>
+              </select>
+              <i class="fa fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"></i>
+            </div>
+            
+            <div class="relative flex-grow">
+              <div id="scoreTip" class="text-red-500 text-sm mb-1 hidden">分数过大，重新输入</div>
+              <input type="number" id="score" placeholder="例如：680" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" min="0" max="750">
+              <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">分</span>
+            </div>
+            
+            <button id="searchBtn" class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2 shrink-0">
+              <i class="fa fa-search"></i>
+              <span>查询学校</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- 条件选择 -->
+        <div>
+          <p class="text-gray-700 font-medium mb-3">选择择校条件：</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="condition-card relative">
+              <input type="radio" id="regular" name="condition" value="regular" class="peer sr-only" checked="">
+              <label for="regular" class="block p-5 border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-primary peer-checked:bg-primary/5 transition-all hover:border-primary/50">
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                    <i class="fa fa-check"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-semibold text-lg mb-1">常规录取</h3>
+                    <p class="text-gray-600 text-sm">推荐录取分数线 ≤ 您的分数</p>
+                  </div>
+                </div>
+                <div class="absolute top-4 right-4 w-5 h-5 rounded-full border-2 border-gray-300 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center">
+                  <div class="w-2 h-2 rounded-full bg-white peer-checked:block hidden"></div>
+                </div>
+              </label>
+            </div>
+            
+            <div class="condition-card relative">
+              <input type="radio" id="supplement" name="condition" value="supplement" class="peer sr-only">
+              <label for="supplement" class="block p-5 border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-primary peer-checked:bg-primary/5 transition-all hover:border-primary/50">
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                    <i class="fa fa-plus-circle"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-semibold text-lg mb-1">补录机会</h3>
+                    <p class="text-gray-600 text-sm">推荐录取分数线 &gt; 您的分数，但不超过20分</p>
+                  </div>
+                </div>
+                <div class="absolute top-4 right-4 w-5 h-5 rounded-full border-2 border-gray-300 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center">
+                  <div class="w-2 h-2 rounded-full bg-white peer-checked:block hidden"></div>
+                </div>
+              </label>
+            </div>
+            
+            <div class="condition-card relative">
+              <input type="radio" id="study" name="condition" value="study" class="peer sr-only">
+              <label for="study" class="block p-5 border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-primary peer-checked:bg-primary/5 transition-all hover:border-primary/50">
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                    <i class="fa fa-graduation-cap"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-semibold text-lg mb-1">借读可能性</h3>
+                    <p class="text-gray-600 text-sm">推荐录取分数线 &gt; 您的分数，但不超过50分</p>
+                  </div>
+                </div>
+                <div class="absolute top-4 right-4 w-5 h-5 rounded-full border-2 border-gray-300 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center">
+                  <div class="w-2 h-2 rounded-full bg-white peer-checked:block hidden"></div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <script>
+    // 分数输入框实时验证
+    document.getElementById('score').addEventListener('input', function(e) {
+      const score = parseInt(e.target.value);
+      const scoreTip = document.getElementById('scoreTip');
+      if (score > 750) {
+        scoreTip.classList.remove('hidden');
+      } else {
+        scoreTip.classList.add('hidden');
+      }
+    });
+    
+    // 搜索按钮点击事件
+    document.getElementById('searchBtn').addEventListener('click', function() {
+      const area = document.getElementById('area').value;
+      const score = document.getElementById('score').value;
+      const condition = document.querySelector('input[name="condition"]:checked').value;
+      
+      if (!area || !score) {
+        alert('请选择区域并输入分数');
+        return;
+      }
+      
+      // 简单验证分数
+      const scoreNum = parseInt(score);
+      if (isNaN(scoreNum) || scoreNum < 0 || scoreNum > 750) {
+        alert('请输入有效的分数（0-750）');
+        return;
+      }
+      
+      // 这里应该发送请求到后端获取数据
+      // 为了演示，我们模拟一些数据
+      const mockResults = [
+        {
+          "学校名称": "上海中学",
+          "区域": "徐汇区",
+          "录取分数": 710,
+          "特色": "市重点",
+          "地址": "上海市徐汇区百色路989号"
+        },
+        {
+          "学校名称": "华师大二附中",
+          "区域": "浦东新区",
+          "录取分数": 705,
+          "特色": "市重点",
+          "地址": "上海市浦东新区张江高科技园区晨晖路555号"
+        },
+        {
+          "学校名称": "复旦附中",
+          "区域": "杨浦区",
+          "录取分数": 703,
+          "特色": "市重点",
+          "地址": "上海市杨浦区国权路383号"
+        }
+      ];
+      
+      // 将结果存储到localStorage
+      localStorage.setItem('searchResults', JSON.stringify(mockResults));
+      
+      // 跳转到结果页面
+      window.location.href = 'matches.html';
+    });
+  </script>
+</body>
+</html>

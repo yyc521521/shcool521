@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高中学校列表 - 按录取分数排序</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3B82F6',
+            secondary: '#F97316',
+            neutral: '#1F2937',
+            light: '#F3F4F6'
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-shadow {
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      }
+      .school-card-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .school-card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      }
+    }
+  </style>
+</head>
+
+<body class="font-inter bg-gray-50 text-neutral">
+  <!-- 导航栏 -->
+  <nav class="bg-white shadow-md fixed w-full z-10 transition-all duration-300" id="navbar">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="text-center md:text-left">
+        <h1 class="text-xl md:text-2xl font-bold text-neutral">高中学校列表</h1>
+      </div>
+      <div class="flex items-center space-x-4">
+        <a href="index.html" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-colors flex items-center">
+          <i class="fa fa-home mr-2"></i>
+          <span>返回首页</span>
+        </a>
+        <div class="hidden md:flex items-center space-x-2 bg-light rounded-lg px-3 py-1.5">
+          <i class="fa fa-sort-numeric-asc text-primary"></i>
+          <span class="text-sm">按录取分数排序</span>
+        </div>
+        <button id="sortToggle" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg transition-colors flex items-center">
+          <i class="fa fa-exchange mr-2"></i>
+          <span>从高到低</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 主要内容区 -->
+  <main class="container mx-auto px-4 pt-24 pb-16">
+    <!-- 页面标题和说明 -->
+    <div class="text-center mb-10">
+      <h2 class="text-[clamp(1.5rem,4vw,2.2rem)] font-bold text-neutral mb-3">高中学校匹配结果</h2>
+      <p class="text-gray-500 max-w-2xl mx-auto">
+        根据您选择的区域和分数，以下是匹配的高中学校列表。
+      </p>
+      <p id="resultDesc" class="text-gray-600 max-w-2xl mx-auto mt-4 font-medium"></p>
+    </div>
+    
+    <!-- 排序说明 -->
+    <div class="bg-white rounded-lg shadow-sm p-4 mb-8 flex flex-wrap items-center justify-between">
+      <div class="flex items-center mb-3 md:mb-0">
+        <i class="fa fa-info-circle text-primary mr-2"></i>
+        <span class="text-gray-600 text-sm">当前排序: <span id="sortIndicator" class="font-medium text-primary">从低到高</span></span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span class="text-sm text-gray-500">筛选:</span>
+        <select class="border border-gray-200 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
+          <option value="all">全部学校</option>
+          <option value="key">重点高中</option>
+          <option value="ordinary">普通高中</option>
+        </select>
+      </div>
+    </div>
+    
+    <!-- 学校列表网格 -->
+    <div id="schoolsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- 学校卡片1 -->
+      <div class="school-card" data-score="520">
+        <div class="bg-white rounded-xl overflow-hidden card-shadow school-card-hover h-full flex flex-col">
+          <div class="relative h-48">
+            <img src="https://picsum.photos/id/1071/600/400" alt="和平中学教学楼" class="w-full h-full object-cover">
+            <div class="absolute top-3 right-3 bg-secondary text-white text-sm font-bold px-3 py-1 rounded-full">
+              520分
+            </div>
+          </div>
+          <div class="p-5 flex-grow">
+            <h3 class="text-xl font-bold mb-2 text-neutral">和平中学</h3>
+            <p class="text-gray-500 text-sm mb-3 flex items-center">
+              <i class="fa fa-map-marker mr-1"></i>
+              <span>北京市朝阳区和平街15号</span>
+            </p>
+            <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+              和平中学成立于1985年，是一所区级重点中学，学校注重学生全面发展，师资力量均衡，教学设施完善。
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded">区级示范</span>
+              <span class="bg-green-50 text-green-700 text-xs px-2 py-1 rounded">寄宿制</span>
+              <span class="bg-purple-50 text-purple-700 text-xs px-2 py-1 rounded">艺术类</span>
+            </div>
+          </div>
+          <div class="px-5 pb-5 pt-0">
+            <a href="#" class="block w-full text-center bg-primary/10 hover:bg-primary/20 text-primary font-medium py-2 rounded-lg transition-colors">
+              查看详情
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 学校卡片2 -->
+      <div class="school-card" data-score="545">
+        <div class="bg-white rounded-xl overflow-hidden card-shadow school-card-hover h-full flex flex-col">
+          <div class="relative h-48">
+            <img src="https://picsum.photos/id/1061/600/400" alt="星光中学图书馆" class="w-full h-full object-cover">
+            <div class="absolute top-3 right-3 bg-secondary text-white text-sm font-bold px-3 py-1 rounded-full">
+              545分
+            </div>
+          </div>
+          <div class="p-5 flex-grow">
+            <h3 class="text-xl font-bold mb-2 text-neutral">星光中学</h3>
+            <p class="text-gray-500 text-sm mb-3 flex items-center">
+              <i class="fa fa-map-marker mr-1"></i>
+              <span>北京市海淀区星光路8号</span>
+            </p>
+            <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+              星光中学以科技教育为特色，拥有多个实验室和创新工作室，培养了大批科技创新人才，近年来升学率稳步提升。
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded">区级示范</span>
+              <span class="bg-yellow-50 text-yellow-700 text-xs px-2 py-1 rounded">科技特色</span>
+            </div>
+          </div>
+          <div class="px-5 pb-5 pt-0">
+            <a href="#" class="block w-full text-center bg-primary/10 hover:bg-primary/20 text-primary font-medium py-2 rounded-lg transition-colors">
+              查看详情
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 学校卡片3 -->
+      <div class="school-card" data-score="563">
+        <div class="bg-white rounded-xl overflow-hidden card-shadow school-card-hover h-full flex flex-col">
+          <div class="relative h-48">
+            <img src="https://picsum.photos/id/1059/600/400" alt="明德中学操场" class="w-full h-full object-cover">
+            <div class="absolute top-3 right-3 bg-secondary text-white text-sm font-bold px-3 py-1 rounded-full">
+              563分
+            </div>
+          </div>
+          <div class="p-5 flex-grow">
+            <h3 class="text-xl font-bold mb-2 text-neutral">明德中学</h3>
+            <p class="text-gray-500 text-sm mb-3 flex items-center">
+              <i class="fa fa-map-marker mr-1"></i>
+              <span>北京市西城区明德胡同22号</span>
+            </p>
+            <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+              明德中学是一所有着百年历史的老校，文化底蕴深厚，以"明德修身，博学笃行"为校训，注重学生品德教育。
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="bg-indigo-50 text-indigo-700 text-xs px-2 py-1 rounded">市级示范</span>
+              <span class="bg-red-50 text-red-700 text-xs px-2 py-1 rounded">历史名校</span>
+            </div>
+          </div>
+          <div class="px-5 pb-5 pt-0">
+            <a href="#" class="block w-full text-center bg-primary/10 hover:bg-primary/20 text-primary font-medium py-2 rounded-lg transition-colors">
+              查看详情
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 学校卡片4 -->
+      <div class="school-card" data-score="582">
+        <div class="bg-white rounded-xl overflow-hidden card-shadow school-card-hover h-full flex flex-col">
+          <div class="relative h-48">
+            <img src="https://picsum.photos/id/1076/600/400" alt="阳光高级中学教学楼" class="w-full h-full object-cover">
+            <div class="absolute top-3 right-3 bg-secondary text-white text-sm font-bold px-3 py-1 rounded-full">
+              582分
+            </div>
+          </div>
+          <div class="p-5 flex-grow">
+            <h3 class="text-xl font-bold mb-2 text-neutral">阳光高级中学</h3>
+            <p class="text-gray-500 text-sm mb-3 flex items-center">
+              <i class="fa fa-map-marker mr-1"></i>
+              <span>北京市海淀区教育园区100号</span>
+            </p>
+            <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+              阳光高级中学创建于1956年，是省级示范性普通高中，师资力量雄厚，现有特级教师8人，高级教师96人。
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="bg-indigo-50 text-indigo-700 text-xs px-2 py-1 rounded">省级示范</span>
+              <span class="bg-green-50 text-green-700 text-xs px-2 py-1 rounded">寄宿制</span>
+            </div>
+          </div>
+          <div class="px-5 pb-5 pt-0">
+            <a href="#" class="block w-full text-center bg-primary/10 hover:bg-primary/20 text-primary font-medium py-2 rounded-lg transition-colors">
+              查看详情
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 学校卡片5 -->
+      <div class="school-card" data-score="605">
+        <div class="bg-white rounded-xl overflow-hidden card-shadow school-card-hover h-full flex flex-col">
+          <div class="relative h-48">
+            <img src="https://picsum.photos/id/1081/600/400" alt="京华中学正门" class="w-full h-full object-cover">
+            <div class="absolute top-3 right-3 bg-secondary text-white text-sm font-bold px-3 py-1 rounded-full">
+              605分
+            </div>
+          </div>
+          <div class="p-5 flex-grow">
+            <h3 class="text-xl font-bold mb-2 text-neutral">京华中学</h3>
+            <p class="text-gray-500 text-sm mb-3 flex items-center">
+              <i class="fa fa-map-marker mr-1"></i>
+              <span>北京市东城区京华大街5号</span>
+            </p>
+            <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+              京华中学是北京市重点中学，一本升学率常年保持在95%以上，注重学生综合素质培养，国际交流项目丰富。
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="bg-purple-50 text-purple-700 text-xs px-2 py-1 rounded">市级重点</span>
+              <span class="bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded">国际部</span>
+            </div>
+          </div>
+          <div class="px-5 pb-5 pt-0">
+            <a href="#" class="block w-full text-center bg-primary/10 hover:bg-primary/20 text-primary font-medium py-2 rounded-lg transition-colors">
+              查看详情
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 学校卡片6 -->
+      <div class="school-card" data-score="620">
+        <div class="bg-white rounded-xl overflow-hidden card-shadow school-card-hover h-full flex flex-col">
+          <div class="relative h-48">
+            <img src="https://picsum.photos/id/1082/600/400" alt="首都第一中学教学楼" class="w-full h-full object-cover">
+            <div class="absolute top-3 right-3 bg-secondary text-white text-sm font-bold px-3 py-1 rounded-full">
+              620分
+            </div>
+          </div>
+          <div class="p-5 flex-grow">
+            <h3 class="text-xl font-bold mb-2 text-neutral">首都第一中学</h3>
+            <p class="text-gray-500 text-sm mb-3 flex items-center">
+              <i class="fa fa-map-marker mr-1"></i>
+              <span>北京市中心区学府路88号</span>
+            </p>
+            <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+              首都第一中学是全市顶尖高中，历史悠久，每年有大量学生考入清华、北大等名牌大学，教学质量全市领先。
+            </p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              <span class="bg-red-50 text-red-700 text-xs px-2 py-1 rounded">省级重点</span>
+              <span class="bg-yellow-50 text-yellow-700 text-xs px-2 py-1 rounded">顶尖学府</span>
+            </div>
+          </div>
+          <div class="px-5 pb-5 pt-0">
+            <a href="#" class="block w-full text-center bg-primary/10 hover:bg-primary/20 text-primary font-medium py-2 rounded-lg transition-colors">
+              查看详情
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 加载更多按钮 -->
+    <div class="mt-10 text-center">
+      <button id="loadMore" class="bg-white border border-primary text-primary hover:bg-primary hover:text-white px-6 py-3 rounded-lg transition-colors font-medium">
+        加载更多学校
+        <i class="fa fa-angle-down ml-2"></i>
+      </button>
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="bg-neutral text-white py-6">
+    <div class="container mx-auto px-4 text-center text-sm">
+      <p>© 2024 初升高信息平台 | 版权所有</p>
+      <p class="mt-1 text-gray-400">本网站信息仅供参考，具体请以学校官方发布为准</p>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // 模拟搜索结果数据
+    const mockResults = [
+      {"名称":"和平中学","区域":"北京市朝阳区和平街15号","分数":"520","类型":"区级示范"},
+      {"名称":"星光中学","区域":"北京市海淀区星光路8号","分数":"545","类型":"科技特色"},
+      {"名称":"明德中学","区域":"北京市西城区明德胡同22号","分数":"563","类型":"市级示范"},
+      {"名称":"阳光高级中学","区域":"北京市海淀区教育园区100号","分数":"582","类型":"省级示范"},
+      {"名称":"京华中学","区域":"北京市东城区京华大街5号","分数":"605","类型":"市级重点"},
+      {"名称":"首都第一中学","区域":"北京市中心区学府路88号","分数":"620","类型":"省级重点"}
+    ];
+
+    // 从localStorage获取搜索结果，如果没有则使用模拟数据
+    let searchResults = JSON.parse(localStorage.getItem('searchResults') || JSON.stringify(mockResults));
+    
+    // 根据搜索结果更新页面内容
+    function updatePageContent() {
+      // 更新结果描述
+      updateResultDescription(searchResults.length);
+      
+      // 显示学校列表
+      displaySchools(searchResults);
+    }
+    
+    // 根据搜索结果数量显示结果描述
+    function updateResultDescription(schoolCount) {
+      if (schoolCount > 0) {
+        document.getElementById('resultDesc').textContent = `根据您的搜索条件，找到 ${schoolCount} 所匹配的学校`;
+      } else {
+        document.getElementById('resultDesc').textContent = `本区无，请重新确定区域+输入分数`;
+        document.getElementById('resultDesc').style.color = 'red';
+      }
+    }
+    
+    // 页面加载完成后更新内容
+    document.addEventListener('DOMContentLoaded', function() {
+      updatePageContent();
+    });
+    
+    // 导航栏滚动效果
+    window.addEventListener('scroll', function() {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 10) {
+        navbar.classList.add('py-2', 'bg-white/95', 'backdrop-blur-sm');
+        navbar.classList.remove('py-3', 'bg-white');
+      } else {
+        navbar.classList.add('py-3', 'bg-white');
+        navbar.classList.remove('py-2', 'bg-white/95', 'backdrop-blur-sm');
+      }
+    });
+    
+    // 排序功能
+    let sortAscending = true; // 默认为从低到高排序
+    
+    document.getElementById('sortToggle').addEventListener('click', function() {
+      // 切换排序方向
+      sortAscending = !sortAscending;
+      
+      // 更新按钮文本
+      const buttonText = this.querySelector('span');
+      const icon = this.querySelector('i');
+      
+      if (sortAscending) {
+        buttonText.textContent = '从高到低';
+        icon.className = 'fa fa-exchange mr-2';
+        document.getElementById('sortIndicator').textContent = '从低到高';
+      } else {
+        buttonText.textContent = '从低到高';
+        icon.className = 'fa fa-exchange mr-2';
+        document.getElementById('sortIndicator').textContent = '从高到低';
+      }
+      
+      // 执行排序
+      sortSchools();
+    });
+    
+    // 排序学校卡片的函数
+    function sortSchools() {
+      const container = document.getElementById('schoolsContainer');
+      const cards = Array.from(container.getElementsByClassName('school-card'));
+      
+      // 根据分数排序
+      cards.sort((a, b) => {
+        const scoreA = parseInt(a.getAttribute('data-score'));
+        const scoreB = parseInt(b.getAttribute('data-score'));
+        
+        return sortAscending ? scoreA - scoreB : scoreB - scoreA;
+      });
+      
+      // 重新排列卡片
+      cards.forEach(card => {
+        container.appendChild(card);
+      });
+      
+      // 添加排序动画效果
+      cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, 50 * index);
+      });
+    }
+    
+    // 显示学校列表
+    function displaySchools(schools) {
+      const container = document.getElementById('schoolsContainer');
+      container.innerHTML = '';
+      
+      if (schools.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full text-center py-16 text-gray-500">
+            <i class=

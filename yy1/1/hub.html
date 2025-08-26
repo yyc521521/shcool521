@@ -1,0 +1,1324 @@
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>上海初升高分数择校平台</title>
+  <!-- 引入Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 引入Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- 配置Tailwind自定义颜色和字体 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#165DFF',
+            secondary: '#36CFC9',
+            accent: '#722ED1',
+            neutral: '#F5F7FA',
+            'neutral-dark': '#4E5969',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-shadow {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      }
+      .school-card {
+        transition: all 0.3s ease;
+      }
+      .school-card:hover {
+        transform: translateY(-5px) rotate(1deg);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+      }
+      .image-container {
+        overflow: hidden;
+        border-radius: 0.75rem 0.75rem 0 0;
+      }
+      .school-image {
+        transition: transform 0.7s ease;
+      }
+      .school-card:hover .school-image {
+        transform: scale(1.1);
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 font-sans text-gray-800">
+  <!-- 导航栏 -->
+  <header class="bg-white shadow-sm sticky top-0 z-50 transition-all duration-300">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <i class="fa fa-graduation-cap text-primary text-2xl"></i>
+        <h1 class="text-xl md:text-2xl font-bold text-primary">上海升学择校助手</h1>
+      </div>
+      
+      <nav class="hidden md:flex items-center space-x-8">
+        <a href="#" class="text-primary font-medium hover:text-primary/80 transition-colors">首页</a>
+        <a href="#consultation" class="text-gray-600 hover:text-primary transition-colors">择校咨询</a>
+        <a href="#guide" class="text-gray-600 hover:text-primary transition-colors">报考指南</a>
+        <a href="#faq" class="text-gray-600 hover:text-primary transition-colors">常见问题</a>
+      </nav>
+      
+      <button class="md:hidden text-gray-600 focus:outline-none">
+        <i class="fa fa-bars text-xl"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- 主横幅 -->
+  <section class="bg-gradient-to-r from-primary to-primary/80 text-white py-12 md:py-20">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-[clamp(1.5rem,4vw,2.5rem)] font-bold mb-4">上海初升高择校，精准匹配更高效</h2>
+      <p class="text-white/90 max-w-2xl mx-auto text-[clamp(1rem,2vw,1.2rem)]">填写咨询信息，老师将为您提供个性化的高中选择方案和专业建议</p>
+    </div>
+  </section>
+
+  <!-- 搜索区：区域+分数 -->
+  <section class="py-8 -mt-6">
+    <div class="container mx-auto px-4">
+      <div class="bg-white rounded-xl p-6 card-shadow max-w-4xl mx-auto">
+        <!-- 区域和分数输入框 -->
+        <div class="mb-8">
+          <label class="block text-gray-700 font-medium mb-2">请选择区域和输入中考分数</label>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <div class="relative flex-grow">
+              <select id="area" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all appearance-none">
+                <option value="">请选择上海区域</option>
+                <option value="all">全部区域</option>
+                <option value="黄埔">黄浦区</option>
+                <option value="徐汇">徐汇区</option>
+                <option value="长宁">长宁区</option>
+                <option value="静安">静安区</option>
+                <option value="普陀">普陀区</option>
+                <option value="虹口">虹口区</option>
+                <option value="杨浦">杨浦区</option>
+                <option value="闵行">闵行区</option>
+                <option value="宝山">宝山区</option>
+                <option value="嘉定">嘉定区</option>
+                <option value="浦东">浦东新区</option>
+                <option value="金山">金山区</option>
+                <option value="松江">松江区</option>
+                <option value="青浦">青浦区</option>
+                <option value="奉贤">奉贤区</option>
+                <option value="崇明">崇明区</option>
+              </select>
+              <i class="fa fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"></i>
+            </div>
+            
+            <div class="relative flex-grow">
+              <div id="scoreTip" class="text-red-500 text-sm mb-1 hidden">分数过大，重新输入</div>
+              <input type="number" id="score" placeholder="例如：680" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" min="0" max="750">
+              <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">分</span>
+            </div>
+            
+            <button id="searchBtn" class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2 shrink-0">
+              <i class="fa fa-search"></i>
+              <span>查询学校</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- 条件选择 -->
+        <div>
+          <p class="text-gray-700 font-medium mb-3">选择择校条件：</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="condition-card relative">
+              <input type="radio" id="regular" name="condition" value="regular" class="peer sr-only" checked="">
+              <label for="regular" class="block p-5 border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-primary peer-checked:bg-primary/5 transition-all hover:border-primary/50">
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                    <i class="fa fa-check"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-semibold text-lg mb-1">常规录取</h3>
+                    <p class="text-gray-600 text-sm">推荐录取分数线 ≤ 您的分数</p>
+                  </div>
+                </div>
+                <div class="absolute top-4 right-4 w-5 h-5 rounded-full border-2 border-gray-300 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center">
+                  <div class="w-2 h-2 rounded-full bg-white peer-checked:block hidden"></div>
+                </div>
+              </label>
+            </div>
+            
+            <div class="condition-card relative">
+              <input type="radio" id="supplement" name="condition" value="supplement" class="peer sr-only">
+              <label for="supplement" class="block p-5 border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-primary peer-checked:bg-primary/5 transition-all hover:border-primary/50">
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                    <i class="fa fa-plus-circle"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-semibold text-lg mb-1">补录机会</h3>
+                    <p class="text-gray-600 text-sm">推荐录取分数线 &gt; 您的分数，但不超过20分</p>
+                  </div>
+                </div>
+                <div class="absolute top-4 right-4 w-5 h-5 rounded-full border-2 border-gray-300 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center">
+                  <div class="w-2 h-2 rounded-full bg-white peer-checked:block hidden"></div>
+                </div>
+              </label>
+            </div>
+            
+            <div class="condition-card relative">
+              <input type="radio" id="study" name="condition" value="study" class="peer sr-only">
+              <label for="study" class="block p-5 border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-primary peer-checked:bg-primary/5 transition-all hover:border-primary/50">
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+                    <i class="fa fa-graduation-cap"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-semibold text-lg mb-1">借读可能性</h3>
+                    <p class="text-gray-600 text-sm">推荐录取分数线 &gt; 您的分数，但不超过50分</p>
+                  </div>
+                </div>
+                <div class="absolute top-4 right-4 w-5 h-5 rounded-full border-2 border-gray-300 peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center">
+                  <div class="w-2 h-2 rounded-full bg-white peer-checked:block hidden"></div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <script>
+    // 分数输入框实时验证
+    document.getElementById('score').addEventListener('input', function() {
+      const score = this.value;
+      const scoreTip = document.getElementById('scoreTip');
+      if (score > 710) {
+        this.style.color = 'red';
+        scoreTip.classList.remove('hidden');
+      } else {
+        this.style.color = '';
+        scoreTip.classList.add('hidden');
+      }
+    });
+    
+    // 搜索按钮点击事件
+    document.getElementById('searchBtn').addEventListener('click', function() {
+      // 获取选择的区域
+    const area = document.getElementById('area').value;
+    // 获取输入的分数
+    const score = document.getElementById('score').value;
+    // 获取选择的条件
+    const conditionElement = document.querySelector('input[name="condition"]:checked');
+    const condition = conditionElement ? conditionElement.value : 'regular'; // 默认为常规录取
+    
+    // 验证输入
+    if (!area || area === '') {
+      alert('请选择区域');
+      return;
+    }
+    
+    if (!score || score <= 0) {
+      alert('请输入有效的分数');
+      return;
+    }
+    
+    // 验证分数是否超过710
+    if (score > 710) {
+      const scoreInput = document.getElementById('score');
+      const scoreTip = document.getElementById('scoreTip');
+      scoreInput.style.color = 'red';
+      scoreTip.classList.remove('hidden');
+      alert('分数超过710，请重新输入');
+      return;
+    }
+    
+    // 调用后端API搜索学校
+    fetch(`/search_schools?area=${encodeURIComponent(area)}&score=${encodeURIComponent(score)}&condition=${encodeURIComponent(condition)}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('网络响应错误');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // 将搜索结果存储到localStorage
+        localStorage.setItem('searchResults', JSON.stringify(data));
+        // 跳转到结果页
+        window.location.href = '/matches';
+      })
+      .catch(error => {
+        console.error('搜索错误:', error);
+        alert('搜索过程中出现错误，请稍后重试');
+      });
+    });
+  </script>
+
+  <!-- 择校咨询表单区 -->
+  <section id="consultation" class="py-12 bg-neutral">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-10">
+        <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-gray-800 mb-3">择校咨询</h2>
+        <p id="consultationDesc" class="text-gray-600 max-w-2xl mx-auto">填写以下信息，老师将为您提供个性化的择校建议和方案</p>
+      </div>
+      
+      <!-- 咨询表单 -->
+      <div class="max-w-2xl mx-auto bg-white rounded-xl p-6 md:p-8 card-shadow transform transition-all hover:shadow-lg">
+        <form id="consultationForm" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="name" class="block text-gray-700 font-medium mb-2">姓名 <span class="text-red-500">*</span></label>
+              <input type="text" id="name" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" required="" placeholder="请输入您的姓名">
+            </div>
+            
+            <div>
+              <label for="phone" class="block text-gray-700 font-medium mb-2">电话 <span class="text-red-500">*</span></label>
+              <input type="tel" id="phone" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" required="" placeholder="请输入您的手机号码" pattern="1[3-9]\d{9}">
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="consultArea" class="block text-gray-700 font-medium mb-2">意向区域 <span class="text-red-500">*</span></label>
+              <select id="consultArea" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all appearance-none" required="">
+                <option value="">请选择上海区域</option>
+                <option value="黄浦区">黄浦区</option>
+                <option value="徐汇区">徐汇区</option>
+                <option value="长宁区">长宁区</option>
+                <option value="静安区">静安区</option>
+                <option value="普陀区">普陀区</option>
+                <option value="虹口区">虹口区</option>
+                <option value="杨浦区">杨浦区</option>
+                <option value="闵行区">闵行区</option>
+                <option value="宝山区">宝山区</option>
+                <option value="嘉定区">嘉定区</option>
+                <option value="浦东新区">浦东新区</option>
+                <option value="金山区">金山区</option>
+                <option value="松江区">松江区</option>
+                <option value="青浦区">青浦区</option>
+                <option value="奉贤区">奉贤区</option>
+                <option value="崇明区">崇明区</option>
+              </select>
+            </div>
+            
+            <div>
+              <label for="consultScore" class="block text-gray-700 font-medium mb-2">中考分数 <span class="text-red-500">*</span></label>
+              <input type="number" id="consultScore" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" required="" min="0" max="750" placeholder="请输入中考分数">
+            </div>
+          </div>
+          
+          <div>
+            <label for="schoolType" class="block text-gray-700 font-medium mb-2">意向学校类型 <span class="text-red-500">*</span></label>
+            <select id="schoolType" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all appearance-none" required="">
+              <option value="">请选择学校类型</option>
+              <option value="市实验性示范性高中">市实验性示范性高中</option>
+              <option value="区重点高中">区重点高中</option>
+              <option value="普通高中">普通高中</option>
+              <option value="统招高中">统招高中</option>
+              <option value="国际高中">国际高中</option>
+            </select>
+          </div>
+          
+          <div>
+            <label for="budget" class="block text-gray-700 font-medium mb-2">预算区间 <span class="text-red-500">*</span></label>
+            <select id="budget" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all appearance-none" required="">
+              <option value="">请选择预算区间</option>
+              <option value="10-20w">10-20万</option>
+              <option value="20-60w">20-60万</option>
+              <option value="60-90w">60-90万</option>
+              <option value="90-150w">90-150万</option>
+              <option value="150w+">150万以上</option>
+            </select>
+          </div>
+          
+          <div>
+            <label for="message" class="block text-gray-700 font-medium mb-2">补充说明</label>
+            <textarea id="message" rows="4" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all" placeholder="请输入您的特殊需求或疑问（选填）"></textarea>
+          </div>
+          
+          <div class="text-center">
+            <button type="submit" class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-lg font-medium transition-all inline-flex items-center gap-2 transform hover:scale-105">
+              <i class="fa fa-paper-plane"></i>
+              <span>提交咨询</span>
+            </button>
+          </div>
+        </form>
+        
+        <script>
+          // 处理咨询表单提交
+          document.getElementById('consultationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 获取表单数据
+            const formData = {
+              name: document.getElementById('name').value,
+              phone: document.getElementById('phone').value,
+              area: document.getElementById('consultArea').value,
+              score: document.getElementById('consultScore').value,
+              schoolType: document.getElementById('schoolType').value,
+              budget: document.getElementById('budget').value,
+              message: document.getElementById('message').value
+            };
+            
+            // 发送数据到后端
+            fetch('/submit_consultation', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.status === 'success') {
+                alert('咨询信息提交成功！');
+                // 重置表单
+                document.getElementById('consultationForm').reset();
+              } else {
+                alert('提交失败：' + data.message);
+              }
+            })
+            .catch(error => {
+              console.error('提交错误:', error);
+              alert('提交过程中出现错误，请稍后重试');
+            });
+          });
+        </script>
+        
+        <div class="mt-8 pt-6 border-t border-gray-100 text-center">
+          <p class="text-gray-600">联系电话杨老师：<a href="tel:13764151660" class="text-primary font-medium hover:underline">13764151660</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 学校列表展示区 -->
+  <section id="schools" class="py-12 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-10">
+        <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-gray-800 mb-3">上海高中参考列表</h2>
+        <p id="resultDesc" class="text-gray-600 max-w-2xl mx-auto">以下是上海各区域主要高中信息，供您参考</p>
+      </div>
+      
+      <!-- 学校类型过滤标签 - 添加了统招高中和国际高中选项 -->
+      <div class="flex flex-wrap justify-center gap-2 mb-8">
+        <button class="filter-tag px-4 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full text-sm font-medium transition-colors">市实验性示范性高中</button>
+        <button class="filter-tag px-4 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full text-sm font-medium transition-colors">区重点高中</button>
+        <button class="filter-tag px-4 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full text-sm font-medium transition-colors">普通高中</button>
+        <button class="filter-tag px-4 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full text-sm font-medium transition-colors">统招高中</button>
+        <button class="filter-tag px-4 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full text-sm font-medium transition-colors">国际高中</button>
+      </div>
+      
+      <!-- 学校列表 - 6宫格布局 -->
+      <div id="schoolList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 max-w-7xl mx-auto">
+        <!-- 学校卡片将通过JavaScript动态生成 -->
+        <div class="col-span-full text-center py-16 text-gray-500">
+          <i class="fa fa-search text-5xl mb-4 opacity-30"></i>
+          <p>请选择区域、输入分数并查询，查看相关学校</p>
+        </div>
+      </div>
+      
+      <!-- 加载更多按钮 -->
+      <div class="text-center mt-10 hidden" id="loadMoreContainer">
+        <button id="loadMoreBtn" class="px-8 py-3 border border-primary text-primary hover:bg-primary hover:text-white rounded-lg transition-all font-medium">
+          加载更多学校
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 报考指南 -->
+  <section id="guide" class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-gray-800 mb-3">上海初升高报考指南</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">了解上海不同类型的入学方式，为您的升学之路做好准备</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div class="bg-neutral rounded-xl p-6 transition-transform hover:-translate-y-1 duration-300">
+          <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-5">
+            <i class="fa fa-check-circle text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-3">常规录取</h3>
+          <p class="text-gray-600">当您的中考分数达到或超过学校的录取分数线时，可正常填报志愿并被录取。这是最直接、最稳妥的入学方式。</p>
+        </div>
+        
+        <div class="bg-neutral rounded-xl p-6 transition-transform hover:-translate-y-1 duration-300">
+          <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-5">
+            <i class="fa fa-refresh text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-3">补录机会</h3>
+          <p class="text-gray-600">部分学校在首轮录取后可能有剩余名额，会进行补录。通常补录分数线会低于正常录取线，给分数稍低的学生机会。</p>
+        </div>
+        
+        <div class="bg-neutral rounded-xl p-6 transition-transform hover:-translate-y-1 duration-300">
+          <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-5">
+            <i class="fa fa-exchange text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-3">借读政策</h3>
+          <p class="text-gray-600">分数未达到目标学校录取线但差距不大的学生，可通过借读方式入学，需符合相关政策并可能支付额外费用，毕业时回原录取学校领取毕业证。</p>
+        </div>
+      </div>
+      
+      <!-- 新增学校类型说明 -->
+      <div class="mt-12 max-w-5xl mx-auto">
+        <h3 class="text-xl font-bold text-center mb-8">学校类型说明</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-neutral rounded-xl p-6">
+            <h4 class="font-semibold text-lg mb-3 flex items-center">
+              <span class="w-6 h-6 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center text-xs mr-2">
+                <i class="fa fa-star"></i>
+              </span>
+              统招高中与普通高中
+            </h4>
+            <p class="text-gray-600">统招高中指通过统一招生计划录取学生的高中，招生过程公开透明，录取分数线由教育部门统一划定。普通高中则是按照一般标准设立的高中，招生方式相对灵活。</p>
+          </div>
+          
+          <div class="bg-neutral rounded-xl p-6">
+            <h4 class="font-semibold text-lg mb-3 flex items-center">
+              <span class="w-6 h-6 rounded-full bg-green-100 text-green-800 flex items-center justify-center text-xs mr-2">
+                <i class="fa fa-globe"></i>
+              </span>
+              国际高中特点
+            </h4>
+            <p class="text-gray-600">国际高中通常采用国际化课程体系（如IB、A-Level、AP等），注重英语教学，毕业生多申请海外大学。国际高中对中考分数要求相对灵活，但通常学费较高。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 常见问题 -->
+  <section id="faq" class="py-16 bg-neutral">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-gray-800 mb-3">常见问题</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">解答您在上海初升高择校过程中可能遇到的问题</p>
+      </div>
+      
+      <div class="max-w-3xl mx-auto space-y-4">
+        <div class="bg-white rounded-xl overflow-hidden card-shadow">
+          <button class="faq-toggle w-full text-left p-5 flex justify-between items-center focus:outline-none">
+            <span class="font-medium">如何确定自己的分数可以报考哪些上海高中？</span>
+            <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+          </button>
+          <div class="faq-content hidden px-5 pb-5 text-gray-600">
+            您可以参考目标学校近3年的录取分数线，结合自己的中考分数进行判断。通常来说，分数达到或超过学校近3年平均录取线的学生，被录取的可能性较大。本平台会根据您输入的分数，自动匹配适合的学校。
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-xl overflow-hidden card-shadow">
+          <button class="faq-toggle w-full text-left p-5 flex justify-between items-center focus:outline-none">
+            <span class="font-medium">国际高中和普通高中有什么主要区别？</span>
+            <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+          </button>
+          <div class="faq-content hidden px-5 pb-5 text-gray-600">
+            国际高中与普通高中的主要区别在于课程体系、教学语言和升学方向。国际高中通常采用国际课程，以英语教学为主，学生主要申请海外大学；普通高中采用国内课程体系，以中文教学为主，学生主要参加国内高考升入国内大学。
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-xl overflow-hidden card-shadow">
+          <button class="faq-toggle w-full text-left p-5 flex justify-between items-center focus:outline-none">
+            <span class="font-medium">统招高中的录取流程是怎样的？</span>
+            <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+          </button>
+          <div class="faq-content hidden px-5 pb-5 text-gray-600">
+            统招高中的录取流程是：学生参加中考 → 公布中考成绩 → 学生填报志愿 → 教育部门根据学生成绩和志愿，按照从高分到低分的原则进行统一录取 → 公布录取结果 → 学生到录取学校报到。整个过程公开透明，由教育部门统一acee组织。
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-xl overflow-hidden card-shadow">
+          <button class="faq-toggle w-full text-left p-5 flex justify-between items-center focus:outline-none">
+            <span class="font-medium">国际高中的入学要求是什么？</span>
+            <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+          </button>
+          <div class="faq-content hidden px-5 pb-5 text-gray-600">
+            国际高中的入学要求相对灵活，通常不单纯以中考分数为唯一标准，还会考察学生的英语水平（如要求托福、雅思成绩或参加学校英语测试）、综合素质、兴趣特长等。部分国际高中也会参考中考成绩，但要求通常低于同层次的普通高中。
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-xl overflow-hidden card-shadow">
+          <button class="faq-toggle w-full text-left p-5 flex justify-between items-center focus:outline-none">
+            <span class="font-medium">上海选择高中除了分数，还应考虑哪些因素？</span>
+            <i class="fa fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+          </button>
+          <div class="faq-content hidden px-5 pb-5 text-gray-600">
+            除了分数匹配度，还应考虑学校的教学质量、师资力量、地理位置、住宿条件、特色课程、升学情况等因素。对于国际高中，还应考虑其课程体系、海外大学录取率、留学支持服务等。最重要的是选择适合学生学习特点和发展需求的学校。
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center space-x-2 mb-4">
+            <i class="fa fa-graduation-cap text-primary text-2xl"></i>
+            <h3 class="text-xl font-bold">上海升学择校助手</h3>
+          </div>
+          <p class="text-gray-400 text-sm">帮助上海初中毕业生根据分数和区域选择最合适的高中，规划升学之路。</p>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold mb-4">快速链接</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="#" class="hover:text-primary transition-colors">首页</a></li>
+            <li><a href="#consultation" class="hover:text-primary transition-colors">择校咨询</a></li>
+            <li><a href="#guide" class="hover:text-primary transition-colors">报考指南</a></li>
+            <li><a href="#faq" class="hover:text-primary transition-colors">常见问题</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold mb-4">联系我们</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li class="flex items-center gap-2"><i class="fa fa-phone"></i> 杨老师：13764151660</li>
+            <li class="flex items-center gap-2"><i class="fa fa-envelope"></i> 1114084911@qq.com</li>
+            <li class="flex items-center gap-2"><i class="fa fa-map-marker"></i> 泰路83号（华东互联网产业园区）</li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold mb-4">关注我们</h4>
+          <div class="flex space-x-4">
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary transition-colors">
+              <i class="fa fa-weixin"></i>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary transition-colors">
+              <i class="fa fa-weibo"></i>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary transition-colors">
+              <i class="fa fa-qq"></i>
+            </a>
+          </div>
+          <p class="mt-4 text-gray-400 text-sm">扫描关注公众号，获取更多上海升学资讯</p>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-500 text-sm">
+        <p>© 2023 上海升学择校助手 版权所有 | 教育咨询服务平台</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 成功提交弹窗 -->
+  <div id="successModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 transform transition-all">
+      <div class="text-center">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fa fa-check text-2xl text-green-500"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-2">提交成功</h3>
+        <p class="text-gray-600 mb-6">您的咨询信息已提交成功，杨老师将尽快与您联系（电话：13764151660）</p>
+        <button id="closeModal" class="bg-primary hover:bg-primary/90 text-white px-6 py-2 rounded-lg font-medium transition-all">
+          确定
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+
+    // 学校数据
+    let schoolsData = [
+      // 默认学校数据
+      {
+        "name": "上海市重点高中",
+        "location": "黄浦区",
+        "type": "市重点",
+        "score": 700,
+        "description": "历史悠久，师资力量雄厚，升学率高",
+        "image": "https://picsum.photos/seed/school1/600/400"
+      },
+      {
+        "name": "国际部高中",
+        "location": "浦东新区",
+        "type": "国际高中",
+        "score": 650,
+        "description": "提供国际课程，注重英语教学和国际交流",
+        "image": "https://picsum.photos/seed/school2/600/400"
+      },
+      {
+        "name": "实验性示范高中",
+        "location": "徐汇区",
+        "type": "区重点",
+        "score": 680,
+        "description": "教学创新，实验项目丰富，学生综合素质高",
+        "image": "https://picsum.photos/seed/school3/600/400"
+      },
+      {
+        "name": "优质民办高中",
+        "location": "闵行区",
+        "type": "统招高中",
+        "score": 660,
+        "description": "教学设施先进，管理严格，注重个性化发展",
+        "image": "https://picsum.photos/seed/school4/600/400"
+      },
+      {
+        "name": "特色职业高中",
+        "location": "宝山区",
+        "type": "国际高中",
+        "score": 600,
+        "description": "开设特色专业，注重实践技能培养",
+        "image": "https://picsum.photos/seed/school5/600/400"
+      },
+      {
+        "name": "新兴综合高中",
+        "location": "长宁区",
+        "type": "区重点",
+        "score": 670,
+        "description": "新兴学校，教学理念先进，发展潜力大",
+        "image": "https://picsum.photos/seed/school6/600/400"
+      }
+    ];
+
+    // DOM元素
+    const areaSelect = document.getElementById('area');
+    const scoreInput = document.getElementById('score');
+    const searchBtn = document.getElementById('searchBtn');
+    const conditionRadios = document.querySelectorAll('input[name="condition"]');
+    const schoolList = document.getElementById('schoolList');
+    const resultDesc = document.getElementById('resultDesc');
+    const loadMoreContainer = document.getElementById('loadMoreContainer');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    const faqToggles = document.querySelectorAll('.faq-toggle');
+    const consultationForm = document.getElementById('consultationForm');
+    const successModal = document.getElementById('successModal');
+    const closeModal = document.getElementById('closeModal');
+    const filterTags = document.querySelectorAll('.filter-tag');
+
+    // 初始显示的学校数量
+    let displayedCount = 6;
+    let currentFilteredSchools = [];
+
+    // 搜索学校 - 同时考虑区域和分数
+    function searchSchools() {
+      const area = areaSelect.value;
+      const score = parseInt(scoreInput.value);
+      
+      // 验证输入
+      if (!area) {
+        alert('请选择区域');
+        return;
+      }
+      
+      if (isNaN(score) || score < 0 || score > 750) {
+        alert('请输入有效的分数（0-750之间）');
+        return;
+      }
+      
+      // 获取选中的条件，默认为常规录取
+      let selectedCondition = 'regular';
+      conditionRadios.forEach(radio => {
+        if (radio.checked) {
+          selectedCondition = radio.value;
+        }
+      });
+      
+      // 构造查询参数
+      const params = new URLSearchParams({
+        area: area,
+        score: score,
+        condition: selectedCondition
+      });
+      
+      // 重定向到/matches路由并传递参数
+      window.location.href = `/matches?${params.toString()}`;
+    }
+
+    // 更新结果描述
+    function updateResultDescription(area, score, condition, count) {
+      const areaText = area === 'all' ? '全部区域' : area;
+      let conditionText = '';
+      switch(condition) {
+        case 'regular':
+          conditionText = '录取分数线小于等于您的分数（国际高中适当放宽）';
+          break;
+        case 'supplement':
+          conditionText = '录取分数线大于您的分数但不超过20-30分（补录机会）';
+          break;
+        case 'study':
+          conditionText = '录取分数线大于您的分数但不超过50-60分（就读可能性）';
+          break;
+      }
+      
+      if (count > 0) {
+        resultDesc.textContent = `在 ${areaText}，根据您的分数 ${score} 分和选择的条件（${conditionText}），找到 ${count} 所匹配的学校`;
+      } else {
+        resultDesc.textContent = `在 ${areaText}，根据您的分数 ${score} 分和选择的条件（${conditionText}），未找到匹配的学校`;
+      }
+    }
+
+    // 显示学校列表
+    function displaySchools(schools) {
+      const schoolList = document.getElementById('schoolList');
+      schoolList.innerHTML = '';
+      
+      if (schools.length === 0) {
+        schoolList.innerHTML = `
+          <div class="col-span-full text-center py-12">
+            <i class="fa fa-search text-4xl text-gray-400 mb-4"></i>
+            <p class="text-gray-500">暂无匹配的学校，请尝试其他筛选条件</p>
+          </div>
+        `;
+        return;
+      }
+      
+      schools.forEach(school => {
+        // 创建学校卡片元素
+        const schoolCard = document.createElement('div');
+        schoolCard.className = 'bg-white rounded-lg overflow-hidden card-shadow school-card flex flex-col h-full';
+        
+        // 根据属性确定标签样式
+        let tagClass = 'bg-gray-100 text-gray-800';
+        if (school.属性.includes('市实验性示范性高中')) {
+          tagClass = 'bg-blue-100 text-blue-800';
+        } else if (school.属性.includes('区重点')) {
+          tagClass = 'bg-green-100 text-green-800';
+        }
+        
+        // 生成随机星级评分（3-5星）
+        const starRating = Math.floor(Math.random() * 3) + 3;
+        
+        // 随机生成分数（用于展示效果）
+        const randomScore = Math.floor(Math.random() * 50) + 650;
+        
+        // 根据分数确定样式和提示
+        let scoreClass = 'text-green-600';
+        let scoreTip = '录取率较高';
+        if (randomScore < 670) {
+          scoreClass = 'text-yellow-600';
+          scoreTip = '录取机会中等';
+        } else if (randomScore < 690) {
+          scoreClass = 'text-red-600';
+          scoreTip = '录取较困难';
+        }
+        
+        // 提取特色中的关键词作为亮点
+        const highlights = school.特色.split('，').slice(0, 3);
+        
+        // 设置卡片内容
+        schoolCard.innerHTML = `
+          <div class="relative image-container h-32 md:h-40">
+            <img src="https://picsum.photos/seed/${school.序号}/600/400" alt="${school.学校名称}" class="w-full h-full object-cover school-image">
+            <!-- 属性标签 -->
+            <div class="absolute bottom-2 left-2 text-xs font-medium px-2 py-1 rounded ${tagClass}">
+              ${school.属性}
+            </div>
+            <!-- 热门程度 -->
+            <div class="absolute top-2 right-2 flex items-center gap-1 text-xs text-red-500 bg-white/80 px-1.5 py-0.5 rounded">
+              <i class="fa fa-fire"></i>
+              <span>${Math.floor(Math.random() * 30) + 70}%</span>
+            </div>
+          </div>
+          <div class="p-3 flex-grow flex flex-col">
+            <div class="flex justify-between items-start mb-1">
+              <h3 class="text-sm md:text-base font-bold mb-0">${school.学校名称}</h3>
+              <!-- 星级标识 -->
+              <div class="flex text-amber-400 text-xs">
+                ${Array(5).fill(0).map((_,i) => 
+                  `<i class="fa fa-star${i >= starRating ? '-o' : ''}"></i>`
+                ).join('')}
+              </div>
+            </div>
+            <div class="flex items-center text-gray-500 text-xs mb-2">
+              <i class="fa fa-map-marker mr-1"></i>
+              <span>${school.区域}</span>
+            </div>
+            <p class="${scoreClass} text-sm font-medium mb-2">${randomScore}分 ${scoreTip}</p>
+            <!-- 核心亮点 -->
+            <div class="flex flex-wrap gap-1 mb-2">
+              ${highlights.map(highlight => 
+                `<span class="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded">${highlight}</span>`
+              ).join('')}
+            </div>
+            <button class="w-full py-1.5 bg-primary hover:bg-primary/90 text-white rounded-md 
+                          transition-all text-xs font-medium mt-auto flex items-center justify-center gap-1">
+              <i class="fa fa-info-circle"></i>
+              <span>查看详情</span>
+            </button>
+          </div>
+        `;
+        
+        schoolList.appendChild(schoolCard);
+      });
+    }
+
+    // 加载更多学校
+    function loadMoreSchools() {
+      displayedCount += 6; // 每次加载6所学校，保持6宫格布局
+      const schoolsToDisplay = currentFilteredSchools.slice(0, displayedCount);
+      displaySchools(schoolsToDisplay);
+      
+      if (displayedCount >= currentFilteredSchools.length) {
+        loadMoreContainer.classList.add('hidden');
+      }
+    }
+
+    // 学校类型过滤
+    function filterByType(type) {
+      // 更新标签样式
+      filterTags.forEach(tag => {
+        if (tag.textContent.includes(type)) {
+          tag.classList.remove('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200');
+          tag.classList.add('bg-primary', 'text-white');
+        } else {
+          tag.classList.remove('bg-primary', 'text-white');
+          tag.classList.add('bg-gray-100', 'text-gray-700', 'hover:bg-gray-200');
+        }
+      });
+      
+      // 过滤学校
+      let filteredByType = currentFilteredSchools.length ? currentFilteredSchools : schoolsData;
+      
+      if (type !== '全部学校') {
+        if (type === '区重点高中') {
+          // 调用q数据库数据
+          fetchQSchoolsData();
+          return;
+        } else if (type === '普通高中') {
+          // 调用pp数据库数据
+          fetchPPSchoolsData();
+          return;
+        } else if (type === '市实验性示范性高中') {
+          // 调用s1数据库数据
+          fetchS1SchoolsData();
+          return;
+        } else if (type === '统招高中') {
+          // 调用ttt_database数据库数据
+          fetchTTTSchoolsData();
+          return;
+        } else {
+          filteredByType = filteredByType.filter(school => school.属性 === type);
+        }
+      }
+      
+      // 显示过滤结果
+      displayedCount = 6;
+      displaySchools(filteredByType.slice(0, displayedCount));
+      
+      // 更新当前筛选结果
+      currentFilteredSchools = filteredByType;
+      
+      // 控制加载更多按钮显示
+      if (filteredByType.length > displayedCount) {
+        loadMoreContainer.classList.remove('hidden');
+      } else {
+        loadMoreContainer.classList.add('hidden');
+      }
+    }
+
+    // 获取tt数据库学校数据
+    async function fetchTTSchoolsData() {
+      try {
+        const response = await fetch('/tt_data');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const ttSchoolsData = await response.json();
+        // 显示前6所学校
+        displayedCount = 6;
+        displaySchools(ttSchoolsData.slice(0, displayedCount));
+        
+        // 更新当前过滤的学校列表
+        currentFilteredSchools = ttSchoolsData;
+        
+        // 控制加载更多按钮显示
+        if (ttSchoolsData.length > displayedCount) {
+          loadMoreContainer.classList.remove('hidden');
+        } else {
+          loadMoreContainer.classList.add('hidden');
+        }
+      } catch (error) {
+        console.error('获取tt学校数据时出错:', error);
+        // 如果获取数据失败，显示错误信息
+        const schoolList = document.getElementById('schoolList');
+        schoolList.innerHTML = `
+          <div class="col-span-full text-center py-12">
+            <i class="fa fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+            <p class="text-red-500 font-medium">获取学校数据失败，请稍后重试</p>
+          </div>
+        `;
+      }
+    }
+    
+    // 获取t1数据库学校数据
+    async function fetchT1SchoolsData() {
+      try {
+        const response = await fetch('/t1_data');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const t1SchoolsData = await response.json();
+        // 显示前6所学校
+        displayedCount = 6;
+        displaySchools(t1SchoolsData.slice(0, displayedCount));
+        
+        // 更新当前过滤的学校列表
+        currentFilteredSchools = t1SchoolsData;
+        
+        // 控制加载更多按钮显示
+        if (t1SchoolsData.length > displayedCount) {
+          loadMoreContainer.classList.remove('hidden');
+        } else {
+          loadMoreContainer.classList.add('hidden');
+        }
+      } catch (error) {
+        console.error('获取t1学校数据时出错:', error);
+        // 如果获取数据失败，显示错误信息
+        const schoolList = document.getElementById('schoolList');
+        schoolList.innerHTML = `
+          <div class="col-span-full text-center py-12">
+            <i class="fa fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+            <p class="text-red-500 font-medium">获取学校数据失败，请稍后重试</p>
+          </div>
+        `;
+      }
+    }
+    
+    // 获取ttt_database数据库学校数据
+    async function fetchTTTSchoolsData() {
+      try {
+        const response = await fetch('/ttt_data');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const tttSchoolsData = await response.json();
+        // 显示前6所学校
+        displayedCount = 6;
+        displaySchools(tttSchoolsData.slice(0, displayedCount));
+        
+        // 更新当前过滤的学校列表
+        currentFilteredSchools = tttSchoolsData;
+        
+        // 控制加载更多按钮显示
+        if (tttSchoolsData.length > displayedCount) {
+          loadMoreContainer.classList.remove('hidden');
+        } else {
+          loadMoreContainer.classList.add('hidden');
+        }
+      } catch (error) {
+        console.error('获取ttt_database学校数据时出错:', error);
+        // 如果获取数据失败，显示错误信息
+        const schoolList = document.getElementById('schoolList');
+        schoolList.innerHTML = `
+          <div class="col-span-full text-center py-12">
+            <i class="fa fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+            <p class="text-red-500 font-medium">获取学校数据失败，请稍后重试</p>
+          </div>
+        `;
+      }
+    }
+
+    // 获取s1数据库学校数据
+    async function fetchS1SchoolsData() {
+      try {
+        const response = await fetch('/s1_data');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const s1SchoolsData = await response.json();
+        // 显示前6所学校
+        displayedCount = 6;
+        displaySchools(s1SchoolsData.slice(0, displayedCount));
+        
+        // 更新当前过滤的学校列表
+        currentFilteredSchools = s1SchoolsData;
+        
+        // 控制加载更多按钮显示
+        if (s1SchoolsData.length > displayedCount) {
+          loadMoreContainer.classList.remove('hidden');
+        } else {
+          loadMoreContainer.classList.add('hidden');
+        }
+      } catch (error) {
+        console.error('获取s1学校数据时出错:', error);
+        // 如果获取数据失败，显示错误信息
+        const schoolList = document.getElementById('schoolList');
+        schoolList.innerHTML = `
+          <div class="col-span-full text-center py-12">
+            <i class="fa fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+            <p class="text-red-500 font-medium">获取学校数据失败，请稍后重试</p>
+          </div>
+        `;
+      }
+    }
+
+    // 获取pp数据库学校数据
+    async function fetchPPSchoolsData() {
+      try {
+        const response = await fetch('/pp_data');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const ppSchoolsData = await response.json();
+        // 显示前6所学校
+        displayedCount = 6;
+        displaySchools(ppSchoolsData.slice(0, displayedCount));
+        
+        // 更新当前过滤的学校列表
+        currentFilteredSchools = ppSchoolsData;
+        
+        // 控制加载更多按钮显示
+        if (ppSchoolsData.length > displayedCount) {
+          loadMoreContainer.classList.remove('hidden');
+        } else {
+          loadMoreContainer.classList.add('hidden');
+        }
+      } catch (error) {
+        console.error('获取pp学校数据时出错:', error);
+        // 如果获取数据失败，显示错误信息
+        const schoolList = document.getElementById('schoolList');
+        schoolList.innerHTML = `
+          <div class="col-span-full text-center py-12">
+            <i class="fa fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+            <p class="text-red-500 font-medium">获取学校数据失败，请稍后重试</p>
+          </div>
+        `;
+      }
+    }
+
+    // 获取q数据库学校数据
+    async function fetchQSchoolsData() {
+      try {
+        const response = await fetch('/qq_data');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const qSchoolsData = await response.json();
+        // 显示前6所学校
+        displayedCount = 6;
+        displaySchools(qSchoolsData.slice(0, displayedCount));
+        
+        // 更新当前过滤的学校列表
+        currentFilteredSchools = qSchoolsData;
+        
+        // 控制加载更多按钮显示
+        if (qSchoolsData.length > displayedCount) {
+          loadMoreContainer.classList.remove('hidden');
+        } else {
+          loadMoreContainer.classList.add('hidden');
+        }
+      } catch (error) {
+        console.error('获取q学校数据时出错:', error);
+        // 如果获取数据失败，显示错误信息
+        const schoolList = document.getElementById('schoolList');
+        schoolList.innerHTML = `
+          <div class="col-span-full text-center py-12">
+            <i class="fa fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+            <p class="text-red-500 font-medium">获取学校数据失败，请稍后重试</p>
+          </div>
+        `;
+      }
+    }
+
+    // 获取q1数据库学校数据
+    async function fetchQ1SchoolsData() {
+      try {
+        const response = await fetch('/q1_data');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const q1SchoolsData = await response.json();
+        // 显示前6所学校
+        displayedCount = 6;
+        displaySchools(q1SchoolsData.slice(0, displayedCount));
+        
+        // 更新当前过滤的学校列表
+        currentFilteredSchools = q1SchoolsData;
+        
+        // 控制加载更多按钮显示
+        if (q1SchoolsData.length > displayedCount) {
+          loadMoreContainer.classList.remove('hidden');
+        } else {
+          loadMoreContainer.classList.add('hidden');
+        }
+      } catch (error) {
+        console.error('获取q1学校数据时出错:', error);
+        // 如果获取数据失败，显示错误信息
+        const schoolList = document.getElementById('schoolList');
+        schoolList.innerHTML = `
+          <div class="col-span-full text-center py-12">
+            <i class="fa fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+            <p class="text-red-500 font-medium">获取学校数据失败，请稍后重试</p>
+          </div>
+        `;
+      }
+    }
+
+    // 处理FAQ折叠效果
+    function setupFaqToggles() {
+      faqToggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+          const content = toggle.nextElementSibling;
+          const icon = toggle.querySelector('i');
+          
+          // 切换内容显示状态
+          content.classList.toggle('hidden');
+          // 旋转图标
+          icon.classList.toggle('rotate-180');
+        });
+      });
+    }
+
+    // 导航栏滚动效果
+    function setupNavbarScrollEffect() {
+      const header = document.querySelector('header');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          header.classList.add('py-2');
+          header.classList.remove('py-4');
+        } else {
+          header.classList.add('py-4');
+          header.classList.remove('py-2');
+        }
+      });
+    }
+
+    // 平滑滚动
+    function setupSmoothScroll() {
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href');
+          if (targetId === '#') return;
+          
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+            window.scrollTo({
+              top: targetElement.offsetTop - 80,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    }
+
+    // 处理表单提交
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      
+      // 显示成功弹窗
+      successModal.classList.remove('hidden');
+      
+      // 重置表单
+      consultationForm.reset();
+    }
+
+    // 关闭弹窗
+    function closeSuccessModal() {
+      successModal.classList.add('hidden');
+    }
+
+    // 事件监听
+    searchBtn.addEventListener('click', searchSchools);
+    
+    // 为条件选择添加事件监听
+    // 移除了条件改变时自动搜索的功能，只在点击查询按钮时搜索
+    conditionRadios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        // 不再自动搜索，仅更新UI或执行其他操作
+      });
+    });
+    
+    // 为区域选择添加事件监听
+    // 移除了区域改变时自动搜索的功能，只在点击查询按钮时搜索
+    areaSelect.addEventListener('change', () => {
+      // 不再自动搜索，仅更新UI或执行其他操作
+    });
+    
+    // 加载更多按钮事件
+    loadMoreBtn.addEventListener('click', loadMoreSchools);
+    
+    // 按Enter键搜索
+    scoreInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && areaSelect.value) {
+        searchSchools();
+      }
+    });
+    
+    // 表单提交事件
+    consultationForm.addEventListener('submit', handleFormSubmit);
+    
+    // 关闭弹窗事件
+    closeModal.addEventListener('click', closeSuccessModal);
+    
+    // 学校类型过滤标签事件
+    filterTags.forEach(tag => {
+      tag.addEventListener('click', () => {
+        filterByType(tag.textContent.trim());
+      });
+    });
+
+    // 获取学校数据
+    async function fetchSchoolsData() {
+      try {
+        const response = await fetch('/qq_data');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        schoolsData = await response.json();
+        // 初始化显示
+        filterAndDisplaySchools();
+      } catch (error) {
+        console.error('获取学校数据时出错:', error);
+        // 如果获取数据失败，显示错误信息
+        const schoolList = document.getElementById('schoolList');
+        schoolList.innerHTML = `
+          <div class="col-span-full text-center py-12">
+            <i class="fa fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+            <p class="text-red-500 font-medium">获取学校数据失败，请稍后重试</p>
+          </div>
+        `;
+      }
+    }
+
+    // 过滤并显示学校
+    function filterAndDisplaySchools() {
+      // 获取选择的区域
+      const selectedArea = areaSelect.value;
+      
+      // 根据选择的区域过滤学校
+      let filteredSchools = schoolsData;
+      if (selectedArea && selectedArea !== 'all') {
+        filteredSchools = schoolsData.filter(school => school.区域 === selectedArea);
+      }
+      
+      // 更新当前过滤的学校列表
+      currentFilteredSchools = filteredSchools;
+      
+      // 显示前6所学校
+      displayedCount = 6;
+      displaySchools(filteredSchools.slice(0, displayedCount));
+      
+      // 控制加载更多按钮显示
+      if (filteredSchools.length > displayedCount) {
+        loadMoreContainer.classList.remove('hidden');
+      } else {
+        loadMoreContainer.classList.add('hidden');
+      }
+    }
+
+    // 初始化
+    setupFaqToggles();
+    setupNavbarScrollEffect();
+    setupSmoothScroll();
+    
+    // 获取学校数据
+    fetchSchoolsData();
+  </script>
+</body>
+</html>
